@@ -1,0 +1,34 @@
+version: "3.9"
+services:
+  app:
+    image: grpc-go
+    build:
+      dockerfile: Dockerfile
+      context: .
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "8080:8080"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "12345"
+      POSTGRES_HOST: "postgres"
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: "url"
+    restart: always
+  redis:
+    image: redis
+    environment:
+      REDIS_HOST: "localhost"
+      REDIS_PORT: "6379"
+      STORAGE: redis
+    container_name: redis
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "12345"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql

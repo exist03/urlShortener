@@ -1,0 +1,18 @@
+---
+
+is_debug: true
+listen:
+  type: port
+  bind_ip: 0.0.0.0
+  port: 8080
+psqlStorage:
+  host: localhost
+  port: 5432
+  database: postgres
+  username: postgres
+  password: postgres
+redisStorage:
+  host: localhost
+  port: 6379
+  database: 0
+  username: user
