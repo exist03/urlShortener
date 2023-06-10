@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"flag"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -22,12 +21,6 @@ const (
 	httpPort = ":8080"
 )
 
-func init() {
-	flag.StringVar(&storage, "storage", "psql", "available storages: redis, psql")
-}
-
-var storage string
-
 type Repository interface {
 	Get(ctx context.Context, shortUrl string) (string, error)
 	Create(ctx context.Context, shortURL, url string) error
@@ -39,10 +32,10 @@ type App struct {
 }
 
 func Run(ctx context.Context, cfg *config.Config) {
-	flag.Parse()
+	storage := os.Getenv("STORAGE_TYPE")
 	a := &App{}
 	log := logger.GetLogger()
-	log.Info().Msg("storage env" + os.Getenv("STORAGE_TYPE"))
+	log.Info().Msg(storage)
 	switch storage {
 	case "psql":
 		a.repository = repository.NewPsql(ctx, cfg.PsqlStorage)
