@@ -3,7 +3,9 @@ package handlers
 import (
 	"errors"
 	"golang.org/x/net/context"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"ozon/domain"
 	"ozon/pb"
@@ -27,5 +29,5 @@ func (h *Handlers) Get(ctx context.Context, req *pb.GetUrlRequest) (*pb.GetUrlRe
 			return nil, err
 		}
 	}
-	return &pb.GetUrlResponse{OriginalUrl: originalUrl}, nil
+	return &pb.GetUrlResponse{OriginalUrl: originalUrl}, grpc.SendHeader(ctx, metadata.New(map[string]string{}))
 }

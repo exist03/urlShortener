@@ -19,10 +19,7 @@ type PsqlRepo struct {
 }
 
 func NewPsql(ctx context.Context, config config.PsqlStorage) *PsqlRepo {
-	pool, err := postgresql.NewClient(ctx, config, 3)
-	if err != nil {
-		return nil
-	}
+	pool, _ := postgresql.NewClient(ctx, config, 3)
 	loger := logger.GetLogger()
 	return &PsqlRepo{pool: pool, logger: loger}
 }

@@ -32,7 +32,7 @@ type App struct {
 }
 
 func Run(ctx context.Context, cfg *config.Config) {
-	storage := os.Getenv("STORAGE_TYPE")
+	storage := cfg.Storage
 	a := &App{}
 	log := logger.GetLogger()
 	log.Info().Msg(storage)
