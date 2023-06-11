@@ -1,5 +1,5 @@
 syntax = "proto3";
-package shortener;
+package urlShortener;
 option go_package = "./pb";
 
 import "google/api/annotations.proto";
