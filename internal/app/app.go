@@ -53,9 +53,9 @@ func Run(ctx context.Context, cfg *config.Config) {
 	}
 	a.handlers = handlers.New(a.service)
 
+	s := grpc.NewServer()
+	pb.RegisterGatewayServer(s, a.handlers)
 	go func() {
-		s := grpc.NewServer()
-		pb.RegisterGatewayServer(s, a.handlers)
 		if err = s.Serve(lis); err != nil {
 			log.Fatal().Msg("failed to serve: " + err.Error())
 		}
@@ -64,6 +64,7 @@ func Run(ctx context.Context, cfg *config.Config) {
 	conn, err := grpc.DialContext(
 		context.Background(),
 		grpcPort,
+		grpc.WithBlock(),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
