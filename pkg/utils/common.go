@@ -5,11 +5,6 @@ import (
 	"time"
 )
 
-const (
-	_defaultConnAttempts = 10
-	_defaultConnTimeout  = time.Second
-)
-
 func DoWithTries(fn func() error, attempts int, delay time.Duration) error {
 	for attempts > 0 {
 		if err := fn(); err != nil {
