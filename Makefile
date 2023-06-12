@@ -6,3 +6,5 @@ psql:
 redis:
 	echo STORAGE_TYPE=redis>.env
 	docker compose up --build
+tests:
+	go test -cover -v ./internal/service
