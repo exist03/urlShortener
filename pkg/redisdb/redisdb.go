@@ -30,7 +30,7 @@ func NewClient(ctx context.Context, config config.RedisStorage, maxAttempts int)
 	}, maxAttempts, 5*time.Second)
 	//one more check
 	if err = client.Ping(ctx).Err(); err != nil {
-		log.Fatal().Err(err).Msg("Redis is unable to connect.")
+		return nil, err
 	}
 	log.Info().Msg("success connection redis")
 	return client, nil

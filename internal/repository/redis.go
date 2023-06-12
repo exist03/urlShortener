@@ -16,11 +16,11 @@ type RedisRepo struct {
 }
 
 func NewRedis(ctx context.Context, config config.RedisStorage) *RedisRepo {
+	log := logger.GetLogger()
 	client, err := redisdb.NewClient(ctx, config, 3)
 	if err != nil {
-		return nil
+		log.Fatal().Err(err).Msg("Can`t create redis client")
 	}
-	log := logger.GetLogger()
 	return &RedisRepo{redis: client, logger: log}
 }
 

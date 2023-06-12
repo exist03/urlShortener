@@ -12,7 +12,7 @@ import (
 	"testing"
 )
 
-func TestHandlers_Get(t *testing.T) {
+func TestGet(t *testing.T) {
 	type mockBehavior func(r *mock_handlers.MockService, shortUrl string)
 	tests := []struct {
 		name    string

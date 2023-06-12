@@ -19,9 +19,12 @@ type PsqlRepo struct {
 }
 
 func NewPsql(ctx context.Context, config config.PsqlStorage) *PsqlRepo {
-	pool, _ := postgresql.NewClient(ctx, config, 3)
-	loger := logger.GetLogger()
-	return &PsqlRepo{pool: pool, logger: loger}
+	log := logger.GetLogger()
+	pool, err := postgresql.NewClient(ctx, config, 3)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Can`t create psql client")
+	}
+	return &PsqlRepo{pool: pool, logger: log}
 }
 
 func (r *PsqlRepo) Create(ctx context.Context, shortURL, url string) (err error) {

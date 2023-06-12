@@ -4,7 +4,7 @@ WORKDIR /urlShortener/
 
 COPY . .
 
-RUN go mod tidy
+RUN go mod download
 EXPOSE 8080
 
 RUN go build cmd/app/main.go

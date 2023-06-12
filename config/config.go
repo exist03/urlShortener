@@ -13,7 +13,6 @@ type Config struct {
 		BindIP string `yaml:"bind_ip" env:"bind_ip" env-default:"0.0.0.0"`
 		Port   string `yaml:"port" env:"port" env-default:"8080"`
 	} `yaml:"listen" env:"listen"`
-	Storage      string `env:"STORAGE_TYPE" env-default:"psql"`
 	PsqlStorage  `yaml:"psqlStorage"`
 	RedisStorage `yaml:"redisStorage"`
 }

@@ -32,30 +32,30 @@ type App struct {
 }
 
 func Run(ctx context.Context, cfg *config.Config) {
-	storage := cfg.Storage
+	storage := os.Getenv("STORAGE_TYPE") //TODO: change to config
 	a := &App{}
 	log := logger.GetLogger()
-	log.Info().Msg(storage)
 	switch storage {
 	case "psql":
 		a.repository = repository.NewPsql(ctx, cfg.PsqlStorage)
 		a.service = service.New(a.repository)
-		log.Info().Msg("psql storage")
+		log.Info().Msg("Psql storage")
 	case "redis":
 		a.repository = repository.NewRedis(ctx, cfg.RedisStorage)
 		a.service = service.New(a.repository)
-		log.Info().Msg("redis storage")
+		log.Info().Msg("Redis storage")
+	default:
+		log.Fatal().Msg("No database has chosen")
 	}
 	lis, err := net.Listen("tcp", grpcPort)
 	if err != nil {
-		log.Fatal().Err(err).Msg("failed to listen")
+		log.Fatal().Err(err).Msg("Failed to listen")
 	}
 	a.handlers = handlers.New(a.service)
 
-	s := grpc.NewServer()
-	pb.RegisterGatewayServer(s, a.handlers)
-
 	go func() {
+		s := grpc.NewServer()
+		pb.RegisterGatewayServer(s, a.handlers)
 		if err = s.Serve(lis); err != nil {
 			log.Fatal().Msg("failed to serve: " + err.Error())
 		}
@@ -67,7 +67,7 @@ func Run(ctx context.Context, cfg *config.Config) {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
-		log.Fatal().Msg("failed to dial server: " + err.Error())
+		log.Fatal().Msg("Failed to dial server: " + err.Error())
 	}
 	defer conn.Close()
 
@@ -85,9 +85,9 @@ func Run(ctx context.Context, cfg *config.Config) {
 	log.Info().Msg("Serving gRPC-Gateway on port " + httpPort)
 	if err = gwServer.ListenAndServe(); err != nil {
 		if err == http.ErrServerClosed {
-			log.Warn().Msg("server closed: " + err.Error())
+			log.Warn().Msg("Server closed: " + err.Error())
 			os.Exit(0)
 		}
-		log.Fatal().Msg("failed to listen and serve: " + err.Error())
+		log.Fatal().Msg("Failed to listen and serve: " + err.Error())
 	}
 }
