@@ -1,8 +1,8 @@
 package service
 
 import (
+	"context"
 	"crypto/sha1"
-	"golang.org/x/net/context"
 	"ozon/domain"
 	"regexp"
 )
