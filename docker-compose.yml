@@ -18,19 +18,37 @@ services:
       POSTGRES_DB: "url"
     env_file  :
       - .env
-    restart: always
+    profiles:
+      - db
   redis:
     image: redis
+    container_name: redis
     environment:
       REDIS_HOST: "localhost"
       REDIS_PORT: "6379"
       STORAGE: redis
-    container_name: redis
+    profiles:
+      - db
   postgres:
     image: postgres
     container_name: postgres
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
+    profiles:
+      - db
     volumes:
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+  in_memory:
+    container_name: in_memory
+    build:
+      dockerfile: Dockerfile
+      context: .
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    profiles:
+      - memory
+    volumes:
+      - .:/app/

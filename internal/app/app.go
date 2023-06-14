@@ -38,15 +38,18 @@ func Run(ctx context.Context, cfg *config.Config) {
 	switch storage {
 	case "psql":
 		a.repository = repository.NewPsql(ctx, cfg.PsqlStorage)
-		a.service = service.New(a.repository)
 		log.Info().Msg("Psql storage")
 	case "redis":
 		a.repository = repository.NewRedis(ctx, cfg.RedisStorage)
-		a.service = service.New(a.repository)
 		log.Info().Msg("Redis storage")
+	case "inMemo":
+		a.repository = repository.NewInMemoryRepo()
+		log.Info().Msg("in-memory storage")
 	default:
 		log.Fatal().Msg("No database has chosen")
 	}
+	a.service = service.New(a.repository)
+
 	lis, err := net.Listen("tcp", grpcPort)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to listen")
