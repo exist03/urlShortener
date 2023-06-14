@@ -12,6 +12,8 @@ make generate-gateway
 make psql
 #Выбор Redis в качестве хранилища
 make redis
+#Выбор im-memory в качестве хранилища
+make in-memory
 ```
 # Запросы обрабатываемые сервисом
 `POST /create body{"url": "job.ozon.ru"}`<br/>
