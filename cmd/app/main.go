@@ -9,5 +9,6 @@ import (
 func main() {
 	ctx := context.Background()
 	cfg := config.GetConfigEnv()
-	app.Run(ctx, cfg)
+	a := app.New(ctx, cfg)
+	app.Run(a)
 }

@@ -31,7 +31,7 @@ type App struct {
 	repository Repository
 }
 
-func Run(ctx context.Context, cfg *config.Config) {
+func New(ctx context.Context, cfg *config.Config) *App {
 	storage := os.Getenv("STORAGE_TYPE") //TODO: change to config
 	a := &App{}
 	log := logger.GetLogger()
@@ -49,7 +49,11 @@ func Run(ctx context.Context, cfg *config.Config) {
 		log.Fatal().Msg("No database has chosen")
 	}
 	a.service = service.New(a.repository)
+	return a
+}
 
+func Run(a *App) {
+	log := logger.GetLogger()
 	lis, err := net.Listen("tcp", grpcPort)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to listen")
