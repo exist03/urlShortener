@@ -11,8 +11,6 @@ import (
 	"ozon/pkg/postgresql"
 )
 
-const sqlDuplicatePK = "ERROR: duplicate key value violates unique constraint \"urls_pkey\" (SQLSTATE 23505)"
-
 type PsqlRepo struct {
 	pool   *pgxpool.Pool
 	logger zerolog.Logger
@@ -28,11 +26,8 @@ func NewPsql(ctx context.Context, config config.PsqlStorage) *PsqlRepo {
 }
 
 func (r *PsqlRepo) Create(ctx context.Context, shortURL, url string) (err error) {
-	_, err = r.pool.Exec(ctx, "INSERT INTO urls VALUES ($1, $2)", shortURL, url)
+	_, err = r.pool.Exec(ctx, "INSERT INTO urls VALUES ($1, $2) ON CONFLICT DO NOTHING", shortURL, url)
 	if err != nil {
-		if err.Error() == sqlDuplicatePK {
-			return nil
-		}
 		r.logger.Debug().Err(err).Msg("create error")
 		return err
 	}
